@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:plink="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:wsdlsoap11="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdlsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap11enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap11env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap12env="http://www.w3.org/2003/05/soap-envelope" xmlns:soap12enc="http://www.w3.org/2003/05/soap-encoding" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing" xmlns:xop="http://www.w3.org/2004/08/xop/include" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://hotelcolibri.mx/pagos" targetNamespace="http://hotelcolibri.mx/pagos" name="Pagos">
+    <wsdl:types>
+        <xs:schema targetNamespace="http://hotelcolibri.mx/pagos" elementFormDefault="qualified">
+            <xs:complexType name="autorizarPago">
+                <xs:sequence>
+                    <xs:element name="referencia" type="xs:string"/>
+                    <xs:element name="monto" type="xs:decimal"/>
+                    <xs:element name="moneda" type="xs:string"/>
+                    <xs:element name="tokenTarjeta" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="autorizarPagoResponse">
+                <xs:sequence>
+                    <xs:element name="autorizarPagoResult" type="xs:string" minOccurs="0" nillable="true"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="consultarPago">
+                <xs:sequence>
+                    <xs:element name="folioPago" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="consultarPagoResponse">
+                <xs:sequence>
+                    <xs:element name="consultarPagoResult" type="xs:string" minOccurs="0" nillable="true"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="emitirFactura">
+                <xs:sequence>
+                    <xs:element name="folioPago" type="xs:string"/>
+                    <xs:element name="rfc" type="xs:string"/>
+                    <xs:element name="razonSocial" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="emitirFacturaResponse">
+                <xs:sequence>
+                    <xs:element name="emitirFacturaResult" type="xs:string" minOccurs="0" nillable="true"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="reembolsarPago">
+                <xs:sequence>
+                    <xs:element name="folioPago" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="reembolsarPagoResponse">
+                <xs:sequence>
+                    <xs:element name="reembolsarPagoResult" type="xs:boolean" minOccurs="0" nillable="true"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="autorizarPago" type="tns:autorizarPago"/>
+            <xs:element name="autorizarPagoResponse" type="tns:autorizarPagoResponse"/>
+            <xs:element name="consultarPago" type="tns:consultarPago"/>
+            <xs:element name="consultarPagoResponse" type="tns:consultarPagoResponse"/>
+            <xs:element name="emitirFactura" type="tns:emitirFactura"/>
+            <xs:element name="emitirFacturaResponse" type="tns:emitirFacturaResponse"/>
+            <xs:element name="reembolsarPago" type="tns:reembolsarPago"/>
+            <xs:element name="reembolsarPagoResponse" type="tns:reembolsarPagoResponse"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="autorizarPago">
+        <wsdl:part name="autorizarPago" element="tns:autorizarPago"/>
+    </wsdl:message>
+    <wsdl:message name="autorizarPagoResponse">
+        <wsdl:part name="autorizarPagoResponse" element="tns:autorizarPagoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="consultarPago">
+        <wsdl:part name="consultarPago" element="tns:consultarPago"/>
+    </wsdl:message>
+    <wsdl:message name="consultarPagoResponse">
+        <wsdl:part name="consultarPagoResponse" element="tns:consultarPagoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="reembolsarPago">
+        <wsdl:part name="reembolsarPago" element="tns:reembolsarPago"/>
+    </wsdl:message>
+    <wsdl:message name="reembolsarPagoResponse">
+        <wsdl:part name="reembolsarPagoResponse" element="tns:reembolsarPagoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="emitirFactura">
+        <wsdl:part name="emitirFactura" element="tns:emitirFactura"/>
+    </wsdl:message>
+    <wsdl:message name="emitirFacturaResponse">
+        <wsdl:part name="emitirFacturaResponse" element="tns:emitirFacturaResponse"/>
+    </wsdl:message>
+    <wsdl:service name="PagosService">
+        <wsdl:port name="Pagos" binding="tns:Pagos">
+            <wsdlsoap11:address location="http://localhost:8002/"/>
+        </wsdl:port>
+    </wsdl:service>
+    <wsdl:portType name="Pagos">
+        <wsdl:operation name="autorizarPago" parameterOrder="autorizarPago">
+            <wsdl:input name="autorizarPago" message="tns:autorizarPago"/>
+            <wsdl:output name="autorizarPagoResponse" message="tns:autorizarPagoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="consultarPago" parameterOrder="consultarPago">
+            <wsdl:input name="consultarPago" message="tns:consultarPago"/>
+            <wsdl:output name="consultarPagoResponse" message="tns:consultarPagoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="reembolsarPago" parameterOrder="reembolsarPago">
+            <wsdl:input name="reembolsarPago" message="tns:reembolsarPago"/>
+            <wsdl:output name="reembolsarPagoResponse" message="tns:reembolsarPagoResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="emitirFactura" parameterOrder="emitirFactura">
+            <wsdl:input name="emitirFactura" message="tns:emitirFactura"/>
+            <wsdl:output name="emitirFacturaResponse" message="tns:emitirFacturaResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="Pagos" type="tns:Pagos">
+        <wsdlsoap11:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="autorizarPago">
+            <wsdlsoap11:operation soapAction="autorizarPago" style="document"/>
+            <wsdl:input name="autorizarPago">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="autorizarPagoResponse">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="consultarPago">
+            <wsdlsoap11:operation soapAction="consultarPago" style="document"/>
+            <wsdl:input name="consultarPago">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="consultarPagoResponse">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="reembolsarPago">
+            <wsdlsoap11:operation soapAction="reembolsarPago" style="document"/>
+            <wsdl:input name="reembolsarPago">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="reembolsarPagoResponse">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="emitirFactura">
+            <wsdlsoap11:operation soapAction="emitirFactura" style="document"/>
+            <wsdl:input name="emitirFactura">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="emitirFacturaResponse">
+                <wsdlsoap11:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+</wsdl:definitions>

@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pag="http://hotelcolibri.mx/pagos">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pag:emitirFactura>
+         <pag:folioPago>PAG-000001</pag:folioPago>
+         <pag:rfc>XAXX010101000</pag:rfc>
+         <pag:razonSocial>Publico en General</pag:razonSocial>
+      </pag:emitirFactura>
+   </soapenv:Body>
+</soapenv:Envelope>

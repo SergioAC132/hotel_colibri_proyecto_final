@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pag="http://hotelcolibri.mx/pagos">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pag:consultarPago>
+         <pag:folioPago>PAG-000002</pag:folioPago>
+      </pag:consultarPago>
+   </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pag="http://hotelcolibri.mx/pagos">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <pag:autorizarPago>
+         <pag:referencia>RES-1003</pag:referencia>
+         <pag:monto>300.00</pag:monto>
+         <pag:moneda>USD</pag:moneda>
+         <pag:tokenTarjeta>tok_fondos_insuficientes</pag:tokenTarjeta>
+      </pag:autorizarPago>
+   </soapenv:Body>
+</soapenv:Envelope>

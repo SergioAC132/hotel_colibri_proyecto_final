@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:div="http://hotelcolibri.mx/divisas">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <div:convertir>
+         <div:monto>5400</div:monto>
+         <div:origen>MXN</div:origen>
+         <div:destino>CAD</div:destino>
+      </div:convertir>
+   </soapenv:Body>
+</soapenv:Envelope>

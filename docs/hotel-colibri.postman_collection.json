@@ -1,0 +1,1205 @@
+{
+  "info": {
+    "name": "Hotel Colibrí – API REST (Avance 1)",
+    "description": "Requiere la API en {{baseUrl}} y el servicio de divisas (soap/divisas_service.py, puerto 8001). Ejecutar las carpetas en orden con la base recién creada (seed: habitaciones 101, 102, 201 y huésped 1 Ana Torres).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "reservaId",
+      "value": "1"
+    },
+    {
+      "key": "habitacionId",
+      "value": ""
+    },
+    {
+      "key": "huespedId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Habitaciones (CRUD)",
+      "item": [
+        {
+          "name": "Crear habitación 301",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": \"301\",\n  \"tipo\": \"DOBLE\",\n  \"capacidad\": 2,\n  \"precioNoche\": 1950.0,\n  \"activa\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "const loc = pm.response.headers.get(\"Location\");",
+                  "pm.test(\"Location presente\", () => pm.expect(loc).to.match(/\\/\\d+$/));",
+                  "if (loc) { pm.collectionVariables.set(\"habitacionId\", loc.split(\"/\").pop()); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear habitación duplicada (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": \"301\",\n  \"tipo\": \"DOBLE\",\n  \"capacidad\": 2,\n  \"precioNoche\": 1950.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar habitaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar habitaciones activas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones?activa=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones"
+              ],
+              "query": [
+                {
+                  "key": "activa",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar habitación",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/{{habitacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "{{habitacionId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar habitación inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "9999"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar habitación",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/{{habitacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "{{habitacionId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"SUITE\",\n  \"capacidad\": 3,\n  \"precioNoche\": 2500.0,\n  \"activa\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de baja habitación (lógica)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/{{habitacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "{{habitacionId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Habitación dada de baja sigue existiendo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/{{habitacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "{{habitacionId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"activa=false\", () => pm.expect(pm.response.json().activa).to.eql(false));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Huéspedes (CRUD)",
+      "item": [
+        {
+          "name": "Crear huésped",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Luis Ramírez\",\n  \"email\": \"luis@correo.mx\",\n  \"telefono\": \"5598765432\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "const loc = pm.response.headers.get(\"Location\");",
+                  "pm.test(\"Location presente\", () => pm.expect(loc).to.match(/\\/\\d+$/));",
+                  "if (loc) { pm.collectionVariables.set(\"huespedId\", loc.split(\"/\").pop()); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear huésped con email duplicado (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana T.\",\n  \"email\": \"ana@correo.mx\",\n  \"telefono\": \"5500000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear huésped con email inválido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sin correo\",\n  \"email\": \"no-es-email\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar huéspedes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar huésped",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes/{{huespedId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes",
+                "{{huespedId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar huésped",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/huespedes/{{huespedId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "huespedes",
+                "{{huespedId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Luis Ramírez Soto\",\n  \"email\": \"luis.ramirez@correo.mx\",\n  \"telefono\": \"5598765432\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Casos de prueba",
+      "item": [
+        {
+          "name": "Caso 1 – Listar divisas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/divisas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "divisas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Incluye USD\", () => pm.expect(pm.response.json()).to.include(\"USD\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 2 – Crear reserva 102, 2 huéspedes, 15-18 ene 2027",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"huespedId\": 1,\n  \"numeroHabitacion\": \"102\",\n  \"fechaEntrada\": \"2027-01-15\",\n  \"fechaSalida\": \"2027-01-18\",\n  \"numeroHuespedes\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "const loc = pm.response.headers.get(\"Location\");",
+                  "pm.test(\"Location presente\", () => pm.expect(loc).to.match(/\\/\\d+$/));",
+                  "if (loc) { pm.collectionVariables.set(\"reservaId\", loc.split(\"/\").pop()); }",
+                  "const j = pm.response.json();",
+                  "pm.test(\"PENDIENTE y 5400.00\", () => { pm.expect(j.estadoHotel).to.eql(\"PENDIENTE\"); pm.expect(Number(j.totalPrice).toFixed(2)).to.eql(\"5400.00\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 3 – Reserva traslapada 102, 17-19 ene 2027 (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"huespedId\": 1,\n  \"numeroHabitacion\": \"102\",\n  \"fechaEntrada\": \"2027-01-17\",\n  \"fechaSalida\": \"2027-01-19\",\n  \"numeroHuespedes\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 4 – Salida antes que entrada (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"huespedId\": 1,\n  \"numeroHabitacion\": \"102\",\n  \"fechaEntrada\": \"2027-02-10\",\n  \"fechaSalida\": \"2027-02-08\",\n  \"numeroHuespedes\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 5 – 4 huéspedes en la 102 (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"huespedId\": 1,\n  \"numeroHabitacion\": \"102\",\n  \"fechaEntrada\": \"2027-03-01\",\n  \"fechaSalida\": \"2027-03-03\",\n  \"numeroHuespedes\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 6a – Cotizar en USD (300.00)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/cotizacion?moneda=USD",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}",
+                "cotizacion"
+              ],
+              "query": [
+                {
+                  "key": "moneda",
+                  "value": "USD"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test(\"USD = 300.00\", () => { pm.expect(j.priceCurrency).to.eql(\"USD\"); pm.expect(Number(j.price).toFixed(2)).to.eql(\"300.00\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 6b – Cotizar en EUR (257.14)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/cotizacion?moneda=EUR",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}",
+                "cotizacion"
+              ],
+              "query": [
+                {
+                  "key": "moneda",
+                  "value": "EUR"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test(\"EUR = 257.14\", () => { pm.expect(j.priceCurrency).to.eql(\"EUR\"); pm.expect(Number(j.price).toFixed(2)).to.eql(\"257.14\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 6c – Cotizar en CAD (415.38)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/cotizacion?moneda=CAD",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}",
+                "cotizacion"
+              ],
+              "query": [
+                {
+                  "key": "moneda",
+                  "value": "CAD"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test(\"CAD = 415.38\", () => { pm.expect(j.priceCurrency).to.eql(\"CAD\"); pm.expect(Number(j.price).toFixed(2)).to.eql(\"415.38\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 7 – Cotizar en JPY (400)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/cotizacion?moneda=JPY",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}",
+                "cotizacion"
+              ],
+              "query": [
+                {
+                  "key": "moneda",
+                  "value": "JPY"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 14 – Disponibles 15-18 ene 2027 para 2 (sin la 102)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/habitaciones/disponibles?entrada=2027-01-15&salida=2027-01-18&huespedes=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "habitaciones",
+                "disponibles"
+              ],
+              "query": [
+                {
+                  "key": "entrada",
+                  "value": "2027-01-15"
+                },
+                {
+                  "key": "salida",
+                  "value": "2027-01-18"
+                },
+                {
+                  "key": "huespedes",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"No aparece la 102\", () => pm.expect(pm.response.json().map(h => h.identifier)).to.not.include(\"102\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 17 – Consultar reserva (JSON-LD)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test(\"JSON-LD LodgingReservation\", () => { pm.expect(j[\"@context\"]).to.eql(\"https://schema.org\"); pm.expect(j[\"@type\"]).to.eql(\"LodgingReservation\"); pm.expect(j.reservationStatus).to.eql(\"https://schema.org/ReservationPending\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 18 – Cotizar con divisas apagado (503)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/cotizacion?moneda=USD",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reservas",
+                "{{reservaId}}",
+                "cotizacion"
+              ],
+              "query": [
+                {
+                  "key": "moneda",
+                  "value": "USD"
+                }
+              ]
+            },
+            "description": "Antes de enviar, detener soap/divisas_service.py (Ctrl+C)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 503\", () => pm.response.to.have.status(503));",
+                  "pm.test(\"ProblemDetail\", () => { const j = pm.response.json(); pm.expect(j).to.include.keys(\"type\", \"title\", \"status\", \"detail\", \"instance\"); });",
+                  "pm.test(\"Mensaje de fachada\", () => pm.expect(pm.response.json().detail).to.eql(\"El servicio de divisas no está disponible. Intente más tarde.\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

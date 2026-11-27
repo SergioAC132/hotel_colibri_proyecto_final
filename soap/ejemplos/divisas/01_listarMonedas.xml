@@ -1,0 +1,6 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:div="http://hotelcolibri.mx/divisas">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <div:listarMonedas/>
+   </soapenv:Body>
+</soapenv:Envelope>

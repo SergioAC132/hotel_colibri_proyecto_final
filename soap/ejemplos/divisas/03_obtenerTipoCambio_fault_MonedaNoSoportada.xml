@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:div="http://hotelcolibri.mx/divisas">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <div:obtenerTipoCambio>
+         <div:origen>USD</div:origen>
+         <div:destino>JPY</div:destino>
+      </div:obtenerTipoCambio>
+   </soapenv:Body>
+</soapenv:Envelope>
