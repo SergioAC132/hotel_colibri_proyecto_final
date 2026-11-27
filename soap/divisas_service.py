@@ -31,7 +31,7 @@ DOS_DECIMALES = D('0.01')
 SEIS_DECIMALES = D('0.000001')
 
 # Tipos de parametros: todos obligatorios en el WSDL
-Texto = Unicode(min_occurs=1, nillable=False)
+Texto = Unicode(min_occurs=1, nillable=False) # min_occurs hace que sea obligatorio, tiene que aparecer por lo menos una vez
 Monto = Decimal(min_occurs=1, nillable=False)
 
 
