@@ -1,5 +1,7 @@
 # hotel_colibri_proyecto_final
 
+falta aqui 
+
 ## Uso de inteligencia artificial
 
 Durante el desarrollo de este proyecto usamos herramientas de IA generativa como apoyo. Todo el código generado fue revisado, probado y ajustado por el equipo, y cada integrante puede explicar y modificar cualquier parte del proyecto.
